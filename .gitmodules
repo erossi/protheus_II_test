@@ -1,0 +1,3 @@
+[submodule "modules/avrlib_cpp_usart"]
+	path = modules/avrlib_cpp_usart
+	url = git@github.com:erossi/avrlib_cpp_usart.git
