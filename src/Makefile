@@ -10,6 +10,10 @@ PWD = $(shell pwd)
 INCLUDE_DIR := $(PWD)/../include
 LIB_DIR ?= $(PWD)/../lib
 
+# Install dirs
+export INSTALL_LIB := $(PWD)/../lib
+export INSTALL_INCLUDE ?= $(PWD)/../include
+
 # Compilers
 CXX := avr-g++
 BUILD_DIR ?= /run/user/$(shell id --user)/build
@@ -56,10 +60,7 @@ $(INCLUDE_DIR):
 # files into ../lib and ../include directory.
 libusart: $(LIB_DIR) $(INCLUDE_DIR)
 	$(Pecho) "  BUILD libusart"
-	$P cd ../modules/avrlib_cpp_usart/src && $(MAKE)
-	$P cd $(LIB_DIR) && ln -sf ../modules/avrlib_cpp_usart/lib/libusart.a
-	$P cd $(INCLUDE_DIR) && \
-		for i in $$(ls ../modules/avrlib_cpp_usart/include/*.h);do ln -sf $$i; done
+	$P cd ../modules/avrlib_cpp_usart/src && $(MAKE) install
 
 lib: libusart
 
@@ -82,10 +83,8 @@ test_%: $(common_o)
 ## CleanUp and tools
 #
 clean_libusart:
-	$(Pecho) "  CLEAN libusart.a"
+	$(Pecho) "  CLEAN libusart"
 	$P cd ../modules/avrlib_cpp_usart/src && $(MAKE) clean
-	$P cd $(LIB_DIR) && rm -f libusart.a
-	$P cd $(INCLUDE_DIR) && rm -f *.h
 
 clean: clean_libusart
 	$(Pecho) "  CLEAN"
